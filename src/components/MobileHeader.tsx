@@ -1,7 +1,9 @@
+'use client';
+
 import { useAuth } from '@/contexts/AuthContext';
 import { ShirtIcon, User, Settings, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 
 interface MobileHeaderProps {
@@ -13,7 +15,7 @@ export function MobileHeader({ title, subtitle }: MobileHeaderProps) {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -60,7 +62,7 @@ export function MobileHeader({ title, subtitle }: MobileHeaderProps) {
               <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                 <button
                   className="flex w-full items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-base"
-                  onClick={() => { setOpen(false); navigate('/settings'); }}
+                  onClick={() => { setOpen(false); router.push('/settings'); }}
                 >
                   <Settings className="w-5 h-5 text-gray-500" />
                   Settings

@@ -14,10 +14,10 @@ cp .env.example .env
 ### Step 2: Update Backend URL in `.env`
 ```env
 # For local development (default)
-VITE_API_BASE_URL=http://localhost:8000/api
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
 
 # OR for production/deployed backend
-VITE_API_BASE_URL=https://your-vercel-url.vercel.app/api
+NEXT_PUBLIC_API_BASE_URL=https://your-vercel-url.vercel.app/api
 ```
 
 ### Step 3: Restart Dev Server
@@ -33,17 +33,17 @@ npm run dev
 
 ### Local Backend (Development)
 ```env
-VITE_API_BASE_URL=http://localhost:8000/api
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
 ```
 
 ### Vercel Deployed Backend
 ```env
-VITE_API_BASE_URL=https://war-backend-xy1z.vercel.app/api
+NEXT_PUBLIC_API_BASE_URL=https://war-backend-xy1z.vercel.app/api
 ```
 
 ### Production Server
 ```env
-VITE_API_BASE_URL=https://api.yourcompany.com/api
+NEXT_PUBLIC_API_BASE_URL=https://api.yourcompany.com/api
 ```
 
 ---
@@ -54,8 +54,8 @@ Once you update `.env`, these files automatically use the new URL:
 
 ✅ `src/services/api.ts` - All API calls  
 ✅ `src/contexts/AuthContext.tsx` - Authentication  
-✅ `src/pages/Orders.tsx` - Orders API  
-✅ `src/pages/Dashboard.tsx` - Dashboard API  
+✅ `src/screens/Orders.tsx` - Orders API  
+✅ `src/screens/Dashboard.tsx` - Dashboard API  
 ✅ All other API requests  
 
 **No code changes needed!**
@@ -76,17 +76,17 @@ Once you update `.env`, these files automatically use the new URL:
 
 ### Development (Local)
 1. Copy `.env.example` → `.env`
-2. Keep `VITE_API_BASE_URL=http://localhost:8000/api`
+2. Keep `NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api`
 3. Run `npm run dev`
 
 ### Staging Server
-1. Copy `.env.example` → `.env.staging`
-2. Set `VITE_API_BASE_URL=https://staging-api.example.com/api`
-3. Run `npm run build -- --mode staging`
+1. Copy `.env.example` → `.env.local`
+2. Set `NEXT_PUBLIC_API_BASE_URL=https://staging-api.example.com/api`
+3. Run `npm run dev` (or set env vars in CI for a staging build)
 
 ### Production Build
 1. Update `.env.production`
-2. Set `VITE_API_BASE_URL=https://api.example.com/api`
+2. Set `NEXT_PUBLIC_API_BASE_URL=https://api.example.com/api`
 3. Run `npm run build` (uses `.env.production`)
 
 ---
@@ -106,7 +106,7 @@ Open browser console and look for:
 ### Enable Debug Mode
 Add to `.env`:
 ```env
-VITE_DEBUG=true
+NEXT_PUBLIC_DEBUG=true
 ```
 
 ### Verify Backend is Running

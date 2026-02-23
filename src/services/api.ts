@@ -30,7 +30,7 @@ class ApiService {
     // Request interceptor - Add auth token to requests
     this.api.interceptors.request.use(
       (config) => {
-        const token = localStorage.getItem('washermanToken');
+        const token = typeof window !== 'undefined' ? localStorage.getItem('washermanToken') : null;
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -47,9 +47,11 @@ class ApiService {
       (error: AxiosError) => {
         if (error.response?.status === 401) {
           // Unauthorized - clear auth and redirect to login
-          localStorage.removeItem('washermanToken');
-          localStorage.removeItem('washermanUser');
-          window.location.href = '/login';
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('washermanToken');
+            localStorage.removeItem('washermanUser');
+            window.location.href = '/login';
+          }
         }
         return Promise.reject(error);
       }
@@ -70,13 +72,15 @@ class ApiService {
 
   async logout(): Promise<void> {
     // Clear local storage
-    localStorage.removeItem('washermanToken');
-    localStorage.removeItem('washermanUser');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('washermanToken');
+      localStorage.removeItem('washermanUser');
+    }
   }
 
   async getCurrentUser(): Promise<User | null> {
     try {
-      const userStr = localStorage.getItem('washermanUser');
+      const userStr = typeof window !== 'undefined' ? localStorage.getItem('washermanUser') : null;
       if (!userStr) return null;
       return JSON.parse(userStr);
     } catch (error) {

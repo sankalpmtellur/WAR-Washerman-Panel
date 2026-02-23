@@ -6,12 +6,12 @@
 export const config = {
   // API Configuration
   api: {
-    baseURL: (import.meta as unknown as { env: Record<string, string> }).env.VITE_API_BASE_URL || 'http://localhost:8000/api',
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api',
     timeout: 10000,
   },
 
   // Debug Mode
-  debug: ((import.meta as unknown as { env: Record<string, string> }).env.VITE_DEBUG === 'true'),
+  debug: (process.env.NEXT_PUBLIC_DEBUG === 'true'),
 
   // App Information
   app: {
@@ -20,11 +20,11 @@ export const config = {
   },
 
   // Environment
-  environment: ((import.meta as unknown as { env: Record<string, string> }).env.MODE),
+  environment: process.env.NODE_ENV,
 
   // Feature Flags
   features: {
-    enableLogging: ((import.meta as unknown as { env: Record<string, string> }).env.VITE_DEBUG === 'true'),
+    enableLogging: (process.env.NEXT_PUBLIC_DEBUG === 'true'),
   },
 } as const;
 

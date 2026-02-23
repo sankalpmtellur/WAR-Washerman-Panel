@@ -1,3 +1,5 @@
+'use client';
+
 // Copied from Admin Panel for washerman panel usage
 import * as React from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";

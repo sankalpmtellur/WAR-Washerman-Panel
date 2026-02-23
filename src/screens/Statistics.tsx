@@ -1,4 +1,6 @@
 
+'use client';
+
 import { useEffect, useState } from 'react';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Card, CardContent } from '@/components/ui/card';

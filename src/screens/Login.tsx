@@ -1,6 +1,8 @@
+'use client';
+
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ShirtIcon, Loader2 } from 'lucide-react';
 
 export default function Login() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +27,7 @@ export default function Login() {
       console.log('Attempting login with:', { username, password: '***' });
       await login({ username, password });
       console.log('Login successful, navigating to orders');
-      navigate('/orders');
+      router.push('/orders');
     } catch (err: any) {
       console.error('Login failed:', err);
       const errorMessage = err.message || 'Invalid credentials. Please try again.';

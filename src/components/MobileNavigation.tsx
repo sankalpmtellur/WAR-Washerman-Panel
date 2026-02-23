@@ -1,4 +1,8 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import type { ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Package2, Search, Clock, Truck, CheckCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -9,7 +13,7 @@ type FilterStatus = 'pending' | 'inprogress' | 'complete';
 
 interface NavItem {
   title: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   href: string;
   label: string;
 }
@@ -48,8 +52,8 @@ const filterItems = [
 ];
 
 export function MobileNavigation() {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [activeFilter, setActiveFilter] = useState<FilterStatus>('pending');
   useAuth(); // Only for auth context if needed
@@ -77,7 +81,7 @@ export function MobileNavigation() {
   // Handle filter change
   const handleFilterChange = (filter: FilterStatus) => {
     setActiveFilter(filter);
-    navigate(`/orders?filter=${filter}`);
+    router.push(`/orders?filter=${filter}`);
   };
 
   return (
@@ -85,11 +89,11 @@ export function MobileNavigation() {
       <div className="flex items-center justify-around px-1 py-1 overflow-x-auto">
         {/* Main navigation items */}
         {navItems.map((item) => {
-          const isActive = location.pathname === item.href;
+          const isActive = pathname === item.href;
           return (
             <Link
               key={item.href}
-              to={item.href}
+              href={item.href}
               className={`flex flex-col items-center justify-center min-w-0 flex-1 px-1 py-2 rounded-lg transition-all duration-200 ${
                 isActive 
                   ? 'text-white transform scale-105' 

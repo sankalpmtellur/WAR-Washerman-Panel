@@ -37,8 +37,8 @@ In **Vercel Dashboard** → Your Project → Settings → Environment Variables:
 Add these variables:
 
 ```
-VITE_API_BASE_URL=https://war-backend-express.vercel.app/api
-VITE_DEBUG=false
+NEXT_PUBLIC_API_BASE_URL=https://war-backend-express.vercel.app/api
+NEXT_PUBLIC_DEBUG=false
 ```
 
 **Note**: Make sure to add for **Production** environment.
@@ -74,8 +74,8 @@ The deployment will start automatically! Monitor progress:
 
 | Variable | Value | Environment |
 |----------|-------|-------------|
-| `VITE_API_BASE_URL` | `https://war-backend-express.vercel.app/api` | Production |
-| `VITE_DEBUG` | `false` | Production |
+| `NEXT_PUBLIC_API_BASE_URL` | `https://war-backend-express.vercel.app/api` | Production |
+| `NEXT_PUBLIC_DEBUG` | `false` | Production |
 
 ---
 
@@ -89,7 +89,7 @@ The deployment will start automatically! Monitor progress:
 
 ### Build Settings
 - **Build Command**: `npm run build`
-- **Output Directory**: `dist`
+- **Output Directory**: `.next` (handled automatically by Vercel)
 - **Install Command**: `npm install` (automatic)
 
 ---
@@ -98,15 +98,13 @@ The deployment will start automatically! Monitor progress:
 
 ### 404 Errors on Page Refresh
 
-If you get 404 errors when refreshing pages (except root), this is normal for SPAs.
-- ✅ Already configured in `vercel.json`
-- All routes rewrite to `/index.html`
+If you get 404 errors when refreshing pages, verify that the route exists under the Next.js App Router and the deployment is up to date.
 
 ### API Calls Failing (404/401)
 
 1. **Check Environment Variables**:
    - Go to Settings → Environment Variables
-   - Verify `VITE_API_BASE_URL` is set correctly
+   - Verify `NEXT_PUBLIC_API_BASE_URL` is set correctly
    - Redeploy if changed
 
 2. **Check Console**:
@@ -205,7 +203,7 @@ If you get 404 errors when refreshing pages (except root), this is normal for SP
 - [ ] Repository pushed to GitHub
 - [ ] Vercel account created
 - [ ] Project imported in Vercel
-- [ ] Environment variables set (VITE_API_BASE_URL)
+- [ ] Environment variables set (NEXT_PUBLIC_API_BASE_URL)
 - [ ] Deployment completed (green checkmark)
 - [ ] URL accessible and responds
 - [ ] Console shows correct configuration

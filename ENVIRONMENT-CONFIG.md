@@ -4,8 +4,8 @@
 
 The application now uses centralized environment configuration. All backend URLs and settings can be changed in one place:
 
-- **Development**: Change `VITE_API_BASE_URL` in `.env`
-- **Production**: Change `VITE_API_BASE_URL` in `.env.production`
+- **Development**: Change `NEXT_PUBLIC_API_BASE_URL` in `.env`
+- **Production**: Change `NEXT_PUBLIC_API_BASE_URL` in `.env.production`
 - **Template**: Reference `.env.example` for available options
 
 ## Quick Start
@@ -16,14 +16,14 @@ cp .env.example .env
 ```
 
 ### 2. **Update Your Backend URL**
-Edit `.env` and change the `VITE_API_BASE_URL`:
+Edit `.env` and change the `NEXT_PUBLIC_API_BASE_URL`:
 
 ```env
 # For local development
-VITE_API_BASE_URL=http://localhost:8000/api
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
 
 # Or for a deployed backend
-VITE_API_BASE_URL=https://your-backend.vercel.app/api
+NEXT_PUBLIC_API_BASE_URL=https://your-backend.vercel.app/api
 ```
 
 ### 3. **Restart Dev Server**
@@ -35,7 +35,7 @@ npm run dev
 
 ## Environment Variables
 
-### `VITE_API_BASE_URL`
+### `NEXT_PUBLIC_API_BASE_URL`
 - **Type**: String
 - **Default**: `http://localhost:8000/api`
 - **Usage**: Base URL for all backend API calls
@@ -43,7 +43,7 @@ npm run dev
   - Development: `http://localhost:8000/api`
   - Production: `https://war-backend.vercel.app/api`
 
-### `VITE_DEBUG`
+### `NEXT_PUBLIC_DEBUG`
 - **Type**: Boolean (as string: `"true"` or `"false"`)
 - **Default**: `false`
 - **Usage**: Enables debug logging in console
@@ -68,7 +68,7 @@ WAR-Washerman-Panel/
    ```typescript
    export const config = {
      api: {
-       baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api',
+       baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api',
        timeout: 10000,
      },
      // ... more config
@@ -83,25 +83,25 @@ WAR-Washerman-Panel/
    // Now all requests use this URL from environment
    ```
 
-3. **Vite Auto-Loading**:
-   - Vite automatically loads `.env` and `.env.{MODE}` files
-   - Variables prefixed with `VITE_` are accessible via `import.meta.env`
+3. **Next.js Auto-Loading**:
+   - Next.js automatically loads `.env`, `.env.local`, and `.env.{environment}` files
+   - Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser via `process.env`
 
 ## Changing Backend URL
 
 ### Local Development
 1. Open `.env`
-2. Update `VITE_API_BASE_URL`:
+2. Update `NEXT_PUBLIC_API_BASE_URL`:
    ```env
-   VITE_API_BASE_URL=http://localhost:8000/api
+   NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
    ```
 3. Restart dev server: `npm run dev`
 
 ### Production Build
 1. Open `.env.production`
-2. Update `VITE_API_BASE_URL`:
+2. Update `NEXT_PUBLIC_API_BASE_URL`:
    ```env
-   VITE_API_BASE_URL=https://your-vercel-url.vercel.app/api
+   NEXT_PUBLIC_API_BASE_URL=https://your-vercel-url.vercel.app/api
    ```
 3. Build: `npm run build`
 
@@ -115,7 +115,7 @@ Create additional environment files:
 
 Then run:
 ```bash
-npm run build -- --mode staging  # Builds with .env.staging
+NODE_ENV=production npm run build  # Uses .env.production
 ```
 
 ## Configuration in Different Environments
@@ -127,7 +127,7 @@ If deploying frontend to Vercel, set environment variable in Vercel Dashboard:
 1. Go to Project Settings → Environment Variables
 2. Add:
    ```
-   Name: VITE_API_BASE_URL
+   Name: NEXT_PUBLIC_API_BASE_URL
    Value: https://your-backend-url.vercel.app/api
    ```
 3. Redeploy
@@ -136,7 +136,7 @@ If deploying frontend to Vercel, set environment variable in Vercel Dashboard:
 
 Build with environment variable:
 ```bash
-docker build --build-arg VITE_API_BASE_URL=https://backend.example.com/api -t washerman-panel .
+docker build --build-arg NEXT_PUBLIC_API_BASE_URL=https://backend.example.com/api -t washerman-panel .
 ```
 
 ### 📱 Different Deployment Methods
@@ -162,7 +162,7 @@ Open browser console and look for debug message:
 ### Enable Debug Logging
 Set in `.env`:
 ```env
-VITE_DEBUG=true
+NEXT_PUBLIC_DEBUG=true
 ```
 
 ### Verify Backend Connection
@@ -191,7 +191,7 @@ curl http://localhost:8000/api/health
    - ❌ Wrong: `http://localhost:8000/api/` (trailing slash)
 
 ### Environment Variable Not Loading
-- Vite caches environment variables
+- Next.js reads environment variables at build and dev start time
 - After changing `.env`, restart dev server: `npm run dev`
 - For production builds, rebuild: `npm run build`
 
@@ -211,10 +211,10 @@ curl http://localhost:8000/api/health
 3. **Use absolute URLs for non-local environments**
    ```env
    # ❌ Avoid relative paths in production
-   VITE_API_BASE_URL=/api
+   NEXT_PUBLIC_API_BASE_URL=/api
 
    # ✅ Use full URLs
-   VITE_API_BASE_URL=https://api.example.com/api
+   NEXT_PUBLIC_API_BASE_URL=https://api.example.com/api
    ```
 
 4. **Keep sensitive data in environment, not code**
@@ -225,7 +225,7 @@ curl http://localhost:8000/api/health
 ## Next Steps
 
 - [ ] Copy `.env.example` to `.env`
-- [ ] Update `VITE_API_BASE_URL` with your backend URL
+- [ ] Update `NEXT_PUBLIC_API_BASE_URL` with your backend URL
 - [ ] Restart dev server
 - [ ] Test API calls
 - [ ] For production, update `.env.production`
@@ -241,5 +241,4 @@ curl http://localhost:8000/api/health
 
 ## Reference
 
-- [Vite Environment Variables](https://vitejs.dev/guide/env-and-mode.html)
-- [Vite Guide - Modes and Environment](https://vitejs.dev/guide/ssr.html#setting-up-the-dev-server)
+- Next.js environment variables documentation

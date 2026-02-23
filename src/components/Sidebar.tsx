@@ -1,4 +1,8 @@
-import { Link, useLocation } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import type { ReactNode } from 'react';
 import { Package2, Search, Shirt } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -6,7 +10,6 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { FilterNav } from '@/components/FilterNav';
 import { User, Settings, LogOut } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { api } from '@/services/api';
 import type { Order } from '@/types';
@@ -15,7 +18,7 @@ type FilterStatus = 'pending' | 'inprogress' | 'complete';
 
 interface NavItem {
   title: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   href: string;
 }
 
@@ -39,11 +42,11 @@ const navItems: NavItem[] = [
 ];
 
 export function Sidebar() {
-  const location = useLocation();
+  const pathname = usePathname();
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
+  const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [activeFilter, setActiveFilter] = useState<FilterStatus>('pending');
 
@@ -73,7 +76,7 @@ export function Sidebar() {
 
   const handleFilterChange = (filter: FilterStatus) => {
     setActiveFilter(filter);
-    navigate(`/orders?filter=${filter}`);
+    router.push(`/orders?filter=${filter}`);
   };
 
   return (
@@ -99,9 +102,9 @@ export function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 space-y-4 overflow-y-auto p-4">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.href;
+          const isActive = pathname === item.href;
           return (
-            <Link key={item.href} to={item.href}>
+            <Link key={item.href} href={item.href}>
               <Button
                 variant={isActive ? 'secondary' : 'ghost'}
                 className={`w-full justify-start h-16 text-lg font-semibold rounded-xl ${
@@ -150,7 +153,7 @@ export function Sidebar() {
               <div className="absolute left-0 bottom-12 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                 <button
                   className="flex w-full items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-base"
-                  onClick={() => { setOpen(false); navigate('/settings'); }}
+                  onClick={() => { setOpen(false); router.push('/settings'); }}
                 >
                   <Settings className="w-5 h-5 text-gray-500" />
                   Settings

@@ -1,5 +1,7 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'next/navigation';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { MobileHeader } from '@/components/MobileHeader';
 import { OrdersTable } from '@/components/OrdersTable';
@@ -12,7 +14,8 @@ import type { Order } from '@/types';
 import { Search, Loader2, RefreshCw, Package2, ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function Orders() {
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
+  const filterParam = searchParams.get('filter');
   const [orders, setOrders] = useState<Order[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,13 +32,12 @@ export default function Orders() {
 
   useEffect(() => {
     // Check for filter parameter in URL
-    const filterParam = searchParams.get('filter');
     if (filterParam === 'pending' || filterParam === 'inprogress' || filterParam === 'complete') {
-      setActiveFilter(filterParam as "pending" | "inprogress" | "complete");
+      setActiveFilter(filterParam as 'pending' | 'inprogress' | 'complete');
     }
     // if (filterParam === 'all') setActiveFilter('all');
     fetchOrders();
-  }, [searchParams]);
+  }, [filterParam]);
 
   // Debounce search query to improve performance
   useEffect(() => {

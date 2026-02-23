@@ -1,7 +1,10 @@
-import { Navigate } from 'react-router-dom';
+'use client';
+
 import type { ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -9,8 +12,15 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
 
-  if (isLoading) {
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.replace('/login');
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  if (isLoading || !isAuthenticated) {
     return (
       <div 
         className="min-h-screen flex items-center justify-center"
@@ -25,10 +35,6 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
         </div>
       </div>
     );
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
   }
 
   return <>{children}</>;
