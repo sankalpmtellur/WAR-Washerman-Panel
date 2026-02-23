@@ -28,9 +28,9 @@ export default function Login() {
       await login({ username, password });
       console.log('Login successful, navigating to orders');
       router.push('/orders');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Login failed:', err);
-      const errorMessage = err.message || 'Invalid credentials. Please try again.';
+      const errorMessage = err instanceof Error ? err.message : 'Invalid credentials. Please try again.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);

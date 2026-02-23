@@ -85,8 +85,12 @@ export default function Orders() {
       setError(null);
       const data = await api.getAllOrders();
       setOrders(data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load orders');
+    } catch (err: unknown) {
+      const responseMessage =
+        typeof err === 'object' && err !== null && 'response' in err
+          ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
+          : undefined;
+      setError(responseMessage || 'Failed to load orders');
       console.error('Error fetching orders:', err);
     } finally {
       setLoading(false);
@@ -115,8 +119,12 @@ export default function Orders() {
     try {
       await api.updateOrderStatus(orderId, newStatus);
       fetchOrders(); // Refresh orders after status update
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to update order status');
+    } catch (err: unknown) {
+      const responseMessage =
+        typeof err === 'object' && err !== null && 'response' in err
+          ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
+          : undefined;
+      setError(responseMessage || 'Failed to update order status');
       console.error('Error updating order status:', err);
     }
   };

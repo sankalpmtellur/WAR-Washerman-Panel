@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { MobileHeader } from '@/components/MobileHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,12 +36,12 @@ export default function Students() {
   const [searchLoading, setSearchLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch all students on load
-  useEffect(() => {
-    fetchStudents();
-  }, []);
+  const getBagNo = (order: Order): string => {
+    const legacyBagNo = (order as { bag_no?: string }).bag_no;
+    return order.bagNo || legacyBagNo || `BAG-${order.id}` || 'Unknown';
+  };
 
-  const fetchStudents = async () => {
+  const fetchStudents = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -87,13 +87,13 @@ export default function Students() {
             }
             // Update bagNo if it's not set or if this order's bagNo is different (in case of multiple bags)
             if (!existing.bagNo || existing.bagNo === 'Unknown' || existing.bagNo.startsWith('BAG-')) {
-              existing.bagNo = order.bagNo || (order as any).bag_no || `BAG-${order.id}` || 'Unknown';
+              existing.bagNo = getBagNo(order);
             }
           } else {
             studentMap.set(studentName, {
               id: studentName.toLowerCase().replace(/\s+/g, '-'),
               name: studentName,
-              bagNo: order.bagNo || (order as any).bag_no || `BAG-${order.id}` || 'Unknown', // Try multiple field names
+              bagNo: getBagNo(order), // Try multiple field names
               email: 'N/A',
               phone: 'N/A',
               totalOrders: 1,
@@ -110,13 +110,23 @@ export default function Students() {
       const studentsArray = Array.from(studentMap.values()).sort((a, b) => a.name.localeCompare(b.name));
       console.log('Students processed:', studentsArray.length);
       setStudents(studentsArray);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching students:', err);
-      setError(err.response?.data?.message || err.message || 'Failed to load students');
+      const responseMessage =
+        typeof err === 'object' && err !== null && 'response' in err
+          ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
+          : undefined;
+      const message = err instanceof Error ? err.message : undefined;
+      setError(responseMessage || message || 'Failed to load students');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Fetch all students on load
+  useEffect(() => {
+    fetchStudents();
+  }, [fetchStudents]);
 
   const fetchStudentDetails = async (studentName: string) => {
     console.log('=== FETCH STUDENT DETAILS START ===');
@@ -163,7 +173,7 @@ export default function Students() {
       setSelectedStudent(studentWithOrders);
       console.log('Selected student set successfully');
       
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('ERROR in fetchStudentDetails:', err);
       setError('Failed to load student details');
     } finally {

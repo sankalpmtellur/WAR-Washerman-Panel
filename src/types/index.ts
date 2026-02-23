@@ -85,7 +85,7 @@ export interface OrderStatistics {
 }
 
 // Generic API Response
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   message: string;
   data?: T;

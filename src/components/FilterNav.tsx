@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import type { Order } from '@/types';
 
 type FilterStatus = 'pending' | 'inprogress' | 'complete';
+type FilterColor = 'amber' | 'blue' | 'green';
 
 interface FilterNavProps {
   activeFilter: FilterStatus;
@@ -24,7 +25,13 @@ export function FilterNav({
     ).length;
   };
 
-  const filterOptions = [
+  const filterOptions: Array<{
+    id: FilterStatus;
+    label: string;
+    icon: typeof Clock;
+    color: FilterColor;
+    description: string;
+  }> = [
     {
       id: 'pending',
       label: 'Start',
@@ -48,17 +55,29 @@ export function FilterNav({
     }
   ];
 
+  const colorConfigs: Record<
+    'amber' | 'blue' | 'green',
+    {
+      bg: string;
+      border: string;
+      ring?: string;
+      text: string;
+      icon: string;
+      bgIcon?: string;
+      hoverBg?: string;
+    }
+  > = {
+    amber: { bg: 'bg-amber-50', border: 'border-amber-200', ring: 'ring-amber-500', text: 'text-amber-900', icon: 'text-amber-600', bgIcon: 'bg-amber-100', hoverBg: 'hover:bg-amber-50' },
+    blue: { bg: 'bg-blue-50', border: 'border-blue-200', ring: 'ring-blue-500', text: 'text-blue-900', icon: 'text-blue-600', bgIcon: 'bg-blue-100', hoverBg: 'hover:bg-blue-50' },
+    green: { bg: 'bg-green-50', border: 'border-green-200', ring: 'ring-green-500', text: 'text-green-900', icon: 'text-green-600', bgIcon: 'bg-green-100', hoverBg: 'hover:bg-green-50' }
+  };
+
   if (layout === 'horizontal') {
     // Mobile layout - horizontal cards
     return (
       <div className="grid grid-cols-3 gap-2">
         {filterOptions.map((option) => {
           const isActive = activeFilter === option.id;
-          const colorConfigs: Record<string, any> = {
-            amber: { bg: 'bg-amber-50', border: 'border-amber-200', ring: 'ring-amber-500', text: 'text-amber-900', icon: 'text-amber-600', bgIcon: 'bg-amber-100' },
-            blue: { bg: 'bg-blue-50', border: 'border-blue-200', ring: 'ring-blue-500', text: 'text-blue-900', icon: 'text-blue-600', bgIcon: 'bg-blue-100' },
-            green: { bg: 'bg-green-50', border: 'border-green-200', ring: 'ring-green-500', text: 'text-green-900', icon: 'text-green-600', bgIcon: 'bg-green-100' }
-          };
           const colorConfig = colorConfigs[option.color];
 
           const Icon = option.icon;
@@ -100,13 +119,12 @@ export function FilterNav({
       {filterOptions.map((option) => {
         const isActive = activeFilter === option.id;
         const Icon = option.icon;
-
-        const colorConfigs: Record<string, any> = {
-          amber: { bg: isActive ? 'bg-amber-100' : 'bg-white', border: 'border-amber-200', text: isActive ? 'text-amber-900' : 'text-amber-700', icon: 'text-amber-600', hoverBg: 'hover:bg-amber-50' },
-          blue: { bg: isActive ? 'bg-blue-100' : 'bg-white', border: 'border-blue-200', text: isActive ? 'text-blue-900' : 'text-blue-700', icon: 'text-blue-600', hoverBg: 'hover:bg-blue-50' },
-          green: { bg: isActive ? 'bg-green-100' : 'bg-white', border: 'border-green-200', text: isActive ? 'text-green-900' : 'text-green-700', icon: 'text-green-600', hoverBg: 'hover:bg-green-50' }
+        const baseConfig = colorConfigs[option.color];
+        const colorConfig = {
+          ...baseConfig,
+          bg: isActive ? baseConfig.bg.replace('-50', '-100') : 'bg-white',
+          text: isActive ? baseConfig.text : baseConfig.text.replace('900', '700'),
         };
-        const colorConfig = colorConfigs[option.color];
 
         return (
           <button

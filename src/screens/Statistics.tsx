@@ -23,7 +23,7 @@ export default function Statistics() {
       try {
         const dashboardStats = await api.getDashboardStats();
         setStats(dashboardStats);
-      } catch (err: any) {
+      } catch {
         setError('Failed to load statistics');
       } finally {
         setLoading(false);

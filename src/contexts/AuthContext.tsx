@@ -64,15 +64,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.error('AuthContext: Login failed -', response.message);
         throw new Error(response.message || 'Login failed');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('AuthContext: Login error:', error);
+      const status =
+        typeof error === 'object' && error !== null && 'response' in error
+          ? (error as { response?: { status?: number } }).response?.status
+          : undefined;
+      const message = error instanceof Error ? error.message : undefined;
       // Provide user-friendly error message
-      if (error.response?.status === 401) {
+      if (status === 401) {
         throw new Error('Invalid username or password');
-      } else if (error.response?.status === 500) {
+      } else if (status === 500) {
         throw new Error('Server error. Please try again later.');
-      } else if (error.message) {
-        throw error;
+      } else if (message) {
+        throw new Error(message);
       } else {
         throw new Error('Failed to connect to server');
       }

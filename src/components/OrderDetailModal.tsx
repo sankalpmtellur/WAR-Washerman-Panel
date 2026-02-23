@@ -88,8 +88,13 @@ export function OrderDetailModal({ order, isOpen, onClose, onStatusUpdate }: Ord
       await api.updateOrderStatus(order.id, nextStatus);
       onStatusUpdate?.();
       onClose();
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to update order status');
+    } catch (err: unknown) {
+      const responseMessage =
+        typeof err === 'object' && err !== null && 'response' in err
+          ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
+          : undefined;
+      const fallbackMessage = err instanceof Error ? err.message : undefined;
+      setError(responseMessage || fallbackMessage || 'Failed to update order status');
       console.error('Error updating order status:', err);
     } finally {
       setUpdating(false);

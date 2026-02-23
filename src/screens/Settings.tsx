@@ -48,7 +48,7 @@ export default function Settings() {
       // TODO: Implement API call to update profile
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated delay
       showMessage('success', 'Profile updated successfully');
-    } catch (error) {
+    } catch {
       showMessage('error', 'Failed to update profile');
     } finally {
       setLoading(false);
@@ -71,7 +71,7 @@ export default function Settings() {
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated delay
       showMessage('success', 'Password changed successfully');
       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    } catch (error) {
+    } catch {
       showMessage('error', 'Failed to change password');
     } finally {
       setLoading(false);
@@ -84,7 +84,7 @@ export default function Settings() {
       // TODO: Implement API call to update notification preferences
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated delay
       showMessage('success', 'Notification preferences updated');
-    } catch (error) {
+    } catch {
       showMessage('error', 'Failed to update preferences');
     } finally {
       setLoading(false);
